@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% set active_page = "project" %}
+
+{% block header %}
+  <h1>{% block title %}Name of the project{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+    <div class="form-row">
+        <button type="button" class="btn btn-outline-info">Add</button>
+        <button type="button" class="btn btn-outline-danger ml-3">Delete</button>
+    </div>
+    <div class="table-responsive">
+    <h3 align="center">Income</h3>
+    <table class="table table-bordered">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Type</th>
+      <th scope="col">Value</th>
+      <th scope="col">Expected</th>
+      <th scope="col">Edit</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Salary</td>
+      <td width="18%">regular</td>
+      <td width="18%">30000</td>
+      <td width="18%">-</td>
+      <td width="18%">
+        <button type="button" class="btn btn-outline-info">Edit</button>
+        <button type="button" class="btn btn-outline-danger ml-3">Delete</button></td>
+    </tr>
+    <tr>
+      <td>Bonus</td>
+      <td>random</td>
+      <td>15000</td>
+      <td>8000</td>
+      <td>
+        <button type="button" class="btn btn-outline-info">Edit</button>
+        <button type="button" class="btn btn-outline-danger ml-3">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+    </div>
+<div class="table-responsive">
+<h3 align="center">Expenses</h3>
+<table class="table table-bordered">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Type</th>
+      <th scope="col">Value</th>
+      <th scope="col">Expected</th>
+      <th scope="col">Edit</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Groceries</td>
+      <td width="18%">regular</td>
+      <td width="18%">6000</td>
+      <td width="18%">5000</td>
+      <td width="18%">
+        <button type="button" class="btn btn-outline-info">Edit</button>
+        <button type="button" class="btn btn-outline-danger ml-3">Delete</button>
+      </td>
+    </tr>
+    <tr>
+      <td>Rent</td>
+      <td>regular</td>
+      <td>16000</td>
+      <td>-</td>
+      <td>
+        <button type="button" class="btn btn-outline-info">Edit</button>
+        <button type="button" class="btn btn-outline-danger ml-3">Delete</button>
+      </td>
+    </tr>
+    <tr>
+      <td>Utilities</td>
+      <td>regular</td>
+      <td>4000</td>
+      <td>-</td>
+      <td>
+        <button type="button" class="btn btn-outline-info">Edit</button>
+        <button type="button" class="btn btn-outline-danger ml-3">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</div>
+    </div>
+    </div>
+{% endblock %}

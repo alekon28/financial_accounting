@@ -85,22 +85,10 @@ def project():
     return render_template("project.html", projects=projects)
 
 
-@app.route('/project/<proj_id>', methods=["GET", "POST"])
+@app.route('/project_data')
 @login_required
-def project(proj_id):
-    user_id = current_user.id
-    if request.method == "POST":
-        project_name = request.form.get("project_name")
-        if Project.query.filter_by(name=project_name).first():
-            flash(f"Project {project_name} already exists", "error")
-        else:
-            new_project = Project(user_id=user_id, name=project_name)
-            db.session.add(new_project)
-            db.session.commit()
-            flash(f"Project {project_name} created successfully", "success")
-    projects = Project.query.filter_by(user_id=user_id).all()
-    print(projects)
-    return render_template("project.html", projects=projects)
+def project_data():
+    return render_template("project_data.html")
 
 
 @app.after_request
