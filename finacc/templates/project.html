@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% set active_page = "project" %}
+
+{% block header %}
+  <h1>{% block title %}Projects{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+    {% if projects %}
+        {% for project in projects %}
+        <div class="row justify-content-center">
+            <a href="#" class="alert alert-secondary alert-link col-9 m-1">{{ project.name }}</a>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="row justify-content-center">
+            <em class="text-center">Nothing yet...</em>
+        </div>
+    {% endif %}
+    </div>
+    <div class="container">
+        <form class="row justify-content-center mt-5" method="post">
+            <label class="sr-only" for="inlineFormInputName2">Name</label>
+            <input name="project_name" type="text" class="form-control mb-2 mr-sm-2 col-7" id="nameOfNewProject" placeholder="Enter name of new project...">
+            <button type="submit" class="btn btn-outline-primary mb-2 col-2">Create new</button>
+        </form>
+    </div>
+{% endblock %}
