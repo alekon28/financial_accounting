@@ -46,10 +46,10 @@ def register():
             flash("Please fill all fields", "error")
             return render_template('register.html')
         elif password != password2:
-            flash("Passwords need equal", "error")
+            flash("Passwords need to match", "error")
             return render_template('register.html')
         elif User.query.filter_by(username=username).first():
-            flash("User already exist", "error")
+            flash("User already exists", "error")
             return render_template("register.html")
         else:
             user = User(username=username, email=email, password=generate_password_hash(password))
