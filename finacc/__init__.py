@@ -4,7 +4,8 @@ from flask_login import LoginManager
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////home/diana/projects/financial_accounting/database/main.db'
+app.secret_key = "LkdrmcPb0O"
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////home/sasha/PycharmProjects/financial_accounting/database/main.db'
 db = SQLAlchemy(app)
 lm = LoginManager(app)
 
