@@ -1,3 +1,4 @@
+from flask_login import current_user
 from flask import render_template, request, g, redirect, url_for, flash
 from flask_login import login_user, login_required, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -28,7 +29,7 @@ def login():
                 flash("Incorrect login or password", "error")
                 return render_template("login.html")
             else:
-                login_user(username)
+                login_user(user)
                 return redirect(url_for("profile"))
 
 
@@ -48,7 +49,7 @@ def register():
         elif password != password2:
             flash("Passwords need to match", "error")
             return render_template('register.html')
-        elif User.query.filter_by(username=username).first():
+        elif User.query.filter_by(username=username).first() or User.query.filter_by(email=email).first():
             flash("User already exists", "error")
             return render_template("register.html")
         else:
@@ -57,6 +58,13 @@ def register():
             db.session.commit()
             flash("Successfully registered", "success")
             return redirect(url_for("login"))
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
 
 
 @app.route('/profile')

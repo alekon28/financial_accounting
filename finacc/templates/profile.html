@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% set active_page = "login" %}
+
+{% block header %}
+  <h1>{% block title %}Profile{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <p>Hello {{ current_user.username }}</p>
+    <p>Email: {{ current_user.email }}</p>
+    <p>ID: {{ current_user.id }}</p>
+{% endblock %}
