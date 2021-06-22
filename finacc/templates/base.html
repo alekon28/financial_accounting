@@ -1,6 +1,28 @@
 <!doctype html>
 <title>{% block title %}{% endblock %} - Flaskr</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+ <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="#">FinAcc</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      {% if g.user %}
+        <a class="nav-item nav-link active" href="{{ url_for('index') }}">Home</a>
+        <a class="nav-item nav-link" href="">About us</a>
+        <span>{{ g.user['username'] }}</span>
+        <a class="nav-item nav-link" href="{{ url_for('logout') }}">Log Out</a>
+      {% else %}
+        <a class="nav-item nav-link {% if active_page == "index" %}active {% endif %}" href="{{ url_for('index') }}">Home </a>
+        <a class="nav-item nav-link {% if active_page == "about us" %}active {% endif %}" href="">About us</a>
+        <a class="nav-item nav-link {% if active_page == "login" %}active {% endif %}" href="{{ url_for('login') }}">Log In</a>
+        <a class="nav-item nav-link {% if active_page == "register" %}active {% endif %}" href="{{ url_for('register') }}">Register</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+<!--
 <nav>
   <h1>Flaskr</h1>
   <ul>
@@ -14,13 +36,34 @@
     {% endif %}
   </ul>
 </nav>
+-->
 <section class="content">
-  <header>
+  <header class="container text-center">
     {% block header %}{% endblock %}
   </header>
-  {% for message in get_flashed_messages() %}
-    <div class="flash">{{ message }}</div>
-  {% endfor %}
   {% block content %}{% endblock %}
+<div class="container text-center">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+            {% if category == "error" %}
+          <div class="alert alert-danger">
+            {{ message }}
+          </div>
+            {% endif %}
+            {% if category == "success" %}
+          <div class="alert alert-success">
+            {{ message }}
+          </div>
+            {% endif %}
+            {% if category == "warning" %}
+          <div class="alert alert-warning">
+            {{ message }}
+          </div>
+            {% endif %}
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+</div>
 </section>
 
