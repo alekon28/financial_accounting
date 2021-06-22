@@ -1,10 +1,10 @@
 from flask_login import current_user
-from flask import render_template, request, g, redirect, url_for, flash
+from flask import render_template, request, g, redirect, url_for, flash, jsonify
 from flask_login import login_user, login_required, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from finacc import app, db
-from finacc.models import User
+from finacc.models import User, Project
 
 
 @app.route('/')
@@ -67,10 +67,19 @@ def logout():
     return redirect(url_for('index'))
 
 
-@app.route('/profile')
+@app.route('/profile', methods=["GET", "POST"])
 @login_required
 def profile():
-    return render_template("profile.html")
+    user_id = current_user.id
+    if request.method == "POST":
+        project_name = request.form.get("project_name")
+        new_project = Project(user_id=user_id, name=project_name)
+        db.session.add(new_project)
+        db.session.commit()
+        flash(f"Project {project_name} created successfully", "success")
+    projects = Project.query.filter_by(user_id=user_id).all()
+    print(projects)
+    return render_template("profile.html", projects=projects)
 
 
 @app.after_request
