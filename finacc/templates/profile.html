@@ -7,5 +7,17 @@
 
 {% block content %}
     <div class="container">
+        <div class="row justify-content-center">
+            <a href="#" class="alert alert-primary alert-link col-9 m-1">Project name #1</a>
+            <button type="button" class="btn btn-primary col-1 m-2">Edit</button>
+            <button type="button" class="btn btn-danger col-1 m-2">Delete</button>
+        </div>
+    </div>
+    <div class="container">
+        <form class="row justify-content-center mt-5" method="post">
+            <label class="sr-only" for="inlineFormInputName2">Name</label>
+            <input name="project_name" type="text" class="form-control mb-2 mr-sm-2 col-9" id="nameOfNewProject" placeholder="Enter name of new project...">
+            <button type="submit" class="btn btn-primary mb-2 col-2">Create new</button>
+        </form>
     </div>
 {% endblock %}
