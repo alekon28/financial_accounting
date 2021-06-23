@@ -7,12 +7,11 @@
 
 {% block content %}
     <div class="container">
-    <div class="form-row">
-        <button type="button" class="btn btn-outline-info">Add</button>
-        <button type="button" class="btn btn-outline-danger ml-3">Delete</button>
+    <div class="form-row mb-3">
+        <h3 class="col-11">Income</h3>
+        <button type="button" class="btn btn-info col-1" data-toggle="modal" data-target="#IncomeAddNew">Add new</button>
     </div>
     <div class="table-responsive">
-    <h3 align="center">Income</h3>
     <table class="table table-bordered">
   <thead class="thead-dark">
     <tr>
@@ -46,8 +45,13 @@
   </tbody>
 </table>
     </div>
+    </div>
+    <div class="container">
+    <div class="form-row mb-3 mt-3">
+        <h3 class="col-11">Expenses</h3>
+        <button type="button" class="btn btn-info col-1" data-toggle="modal" data-target="#ExpensesAddNew">Add new</button>
+    </div>
 <div class="table-responsive">
-<h3 align="center">Expenses</h3>
 <table class="table table-bordered">
   <thead class="thead-light">
     <tr>
@@ -85,7 +89,7 @@
       <td>4000</td>
       <td>-</td>
       <td>
-        <button type="button" class="btn btn-outline-info">Edit</button>
+        <button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#ModalEdit">Edit</button>
         <button type="button" class="btn btn-outline-danger ml-3">Delete</button>
       </td>
     </tr>
@@ -93,5 +97,139 @@
 </table>
 </div>
     </div>
+
+
+
+    <div class="container">
+        <div class="modal fade" id="ModalEdit" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="ModalLabel">Editing mode</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label class="mr-sm-2" for="inlineFormCustomSelect">Type</label>
+                                <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+                                    <option selected>Choose...</option>
+                                    <option value="1">regular</option>
+                                    <option value="2">random</option>
+                                    <option value="2">savings</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Value:</label>
+                                <input type="number" class="form-control" id="value">
+                            </div>
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Name:</label>
+                                <input type="text" class="form-control" id="name">
+                            </div>
+                            <div class="form-group">
+                                <label for="message-text" class="col-form-label">Comment:</label>
+                                <textarea class="form-control" id="message-text"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-info">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+        <div class="container">
+        <div class="modal fade" id="IncomeAddNew" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="ModalLabel">Adding new income</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label class="mr-sm-2" for="inlineFormCustomSelect">Type</label>
+                                <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+                                    <option selected>Choose...</option>
+                                    <option value="1">regular</option>
+                                    <option value="2">random</option>
+                                    <option value="2">savings</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Value:</label>
+                                <input type="number" class="form-control" id="value">
+                            </div>
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Name:</label>
+                                <input type="text" class="form-control" id="name">
+                            </div>
+                            <div class="form-group">
+                                <label for="message-text" class="col-form-label">Comment:</label>
+                                <textarea class="form-control" id="message-text"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-info">Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="modal fade" id="ExpensesAddNew" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="ModalLabel">Adding new expense</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label class="mr-sm-2" for="inlineFormCustomSelect">Type</label>
+                                <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+                                    <option selected>Choose...</option>
+                                    <option value="1">regular</option>
+                                    <option value="2">random</option>
+                                    <option value="2">savings</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Value:</label>
+                                <input type="number" class="form-control" id="value">
+                            </div>
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Name:</label>
+                                <input type="text" class="form-control" id="name">
+                            </div>
+                            <div class="form-group">
+                                <label for="message-text" class="col-form-label">Comment:</label>
+                                <textarea class="form-control" id="message-text"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-info">Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
