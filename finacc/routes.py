@@ -4,7 +4,8 @@ from flask_login import login_user, login_required, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from finacc import app, db
-from finacc.models import User, Project
+from finacc.models import User, Project, Income, Expense
+from finacc.validator import Validator
 
 
 @app.route('/')
@@ -81,14 +82,62 @@ def project():
             db.session.commit()
             flash(f"Project {project_name} created successfully", "success")
     projects = Project.query.filter_by(user_id=user_id).all()
-    print(projects)
     return render_template("project.html", projects=projects)
 
 
-@app.route('/project_data')
+@app.route('/project_data', methods=["GET"])
 @login_required
 def project_data():
-    return render_template("project_data.html")
+    user_id = current_user.id
+    project_id = request.args.get("id")
+    project = Project.query.filter_by(id=project_id).first()
+    if not project or project.user_id != user_id:
+        flash("Project not found", "error")
+        return redirect(url_for('project'))
+    incomes = Income.query.filter_by(project_id=project.id).all()
+    expenses = Expense.query.filter_by(project_id=project.id).all()
+    return render_template("project_data.html", incomes=incomes, expenses=expenses, project=project)
+
+
+@app.route('/add_income', methods=["POST"])
+@login_required
+def add_income():
+    user_id = current_user.id
+    project_id = request.form.get('project_id')
+    income_type = request.form.get('type')
+    value = request.form.get('value')
+    name = request.form.get('name')
+    comment = request.form.get('comment')
+    validator = Validator()
+    if not validator.validate_new_income(income_type, value, name, comment):
+        flash("Enter correct income data", "error")
+        return redirect(url_for('project_data', id=project_id))
+    project = Project.query.filter_by(id=project_id).first()
+    if not project or project.user_id != user_id:
+        flash("Project not found", "error")
+        return redirect(url_for('project'))
+    new_income = Income(project_id=project_id, name=name, type=income_type, value=int(value), comment=comment)
+    db.session.add(new_income)
+    db.session.commit()
+    flash(f"Income {new_income.name} added successfully", "success")
+    return redirect(url_for('project_data', id=project_id))
+
+
+@app.route('/delete_income', methods=["GET"])
+@login_required
+def delete_income():
+    user_id = current_user.id
+    income_id = request.args.get('income_id')
+    income = Income.query.filter_by(id=income_id).first()
+    project = Project.query.filter_by(id=income.project_id).first()
+    print(user_id, income_id, project)
+    if not project or project.user_id != user_id:
+        flash("Project not found", "error")
+        return redirect(url_for('project'))
+    db.session.delete(income)
+    db.session.commit()
+    flash(f"Income {income.name} was deleted successfully", "warning")
+    return redirect(url_for('project_data', id=project.id))
 
 
 @app.after_request

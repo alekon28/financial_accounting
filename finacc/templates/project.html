@@ -16,7 +16,7 @@
     {% if projects %}
         {% for project in projects %}
         <tr>
-            <td width="80%">{{ project.name }}</td>
+            <td width="80%" ><a href="{{ url_for('project_data', id=project.id) }}">{{ project.name }}</a></td>
             <td>
                 <button type="button" class="btn btn-outline-info">Edit</button>
                 <button type="button" class="btn btn-outline-danger ml-3">Delete</button>

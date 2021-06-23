@@ -26,8 +26,8 @@ class Project(db.Model):
     name: str
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.String(80), db.ForeignKey('user.id'), nullable=False)
-    name = db.Column(db.String(120), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    name = db.Column(db.String(120), unique=True, nullable=False)
     expenses = db.relationship('Expense', backref='Project', lazy=True)
     incomes = db.relationship('Income', backref='Project', lazy=True)
 
@@ -46,7 +46,7 @@ class Expense(db.Model):
     project_id = db.Column(db.String(80), db.ForeignKey('project.id'), nullable=False)
     name = db.Column(db.String(120), nullable=False)
     type = db.Column(db.String(120), nullable=False)
-    date = db.Column(db.DateTime, nullable=False)
+    date = db.Column(db.DateTime, nullable=False, default=datetime.now())
     value = db.Column(db.Integer, nullable=False)
     comment = db.Column(db.String(1024), nullable=False)
     CheckConstraint("type = 'random' or type = 'regular' or type = 'savings'", name='type_c')
@@ -66,7 +66,7 @@ class Income(db.Model):
     project_id = db.Column(db.String(80), db.ForeignKey('project.id'), nullable=False)
     name = db.Column(db.String(120), nullable=False)
     type = db.Column(db.String(120), nullable=False)
-    date = db.Column(db.DateTime, nullable=False)
+    date = db.Column(db.DateTime, nullable=False, default=datetime.now())
     value = db.Column(db.Integer, nullable=False)
     comment = db.Column(db.String(1024), nullable=False)
     CheckConstraint("type = 'random' or type = 'regular' or type = 'savings'", name='type_c')

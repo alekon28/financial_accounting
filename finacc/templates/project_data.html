@@ -11,6 +11,7 @@
         <h3 class="col-11">Income</h3>
         <button type="button" class="btn btn-info col-1" data-toggle="modal" data-target="#IncomeAddNew">Add new</button>
     </div>
+        {% if incomes %}
     <div class="table-responsive">
     <table class="table table-bordered">
   <thead class="thead-dark">
@@ -23,28 +24,23 @@
     </tr>
   </thead>
   <tbody>
+  {% for income in incomes %}
     <tr>
-      <td>Salary</td>
-      <td width="18%">regular</td>
-      <td width="18%">30000</td>
+      <td>{{ income.name }}</td>
+      <td width="18%">{{ income.type }}</td>
+      <td width="18%">{{ income.value }}</td>
       <td width="18%">-</td>
       <td width="18%">
-        <button type="button" class="btn btn-outline-info">Edit</button>
-        <button type="button" class="btn btn-outline-danger ml-3">Delete</button></td>
+        <button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#ModalEdit">Edit</button>
+        <a type="button" class="btn btn-outline-danger ml-3" href="{{ url_for('delete_income', income_id=income.id) }}">Delete</a></td>
     </tr>
-    <tr>
-      <td>Bonus</td>
-      <td>random</td>
-      <td>15000</td>
-      <td>8000</td>
-      <td>
-        <button type="button" class="btn btn-outline-info">Edit</button>
-        <button type="button" class="btn btn-outline-danger ml-3">Delete</button>
-      </td>
-    </tr>
+  {% endfor %}
   </tbody>
 </table>
     </div>
+    {% else %}
+    <p>Nothing yet...</p>
+    {% endif %}
     </div>
     <div class="container">
     <div class="form-row mb-3 mt-3">
@@ -154,35 +150,36 @@
                         <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
+                    <form method="POST" action="/add_income">
                     <div class="modal-body">
-                        <form>
                             <div class="form-group">
                                 <label class="mr-sm-2" for="inlineFormCustomSelect">Type</label>
-                                <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+                                <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" name="type">
                                     <option selected>Choose...</option>
-                                    <option value="1">regular</option>
-                                    <option value="2">random</option>
-                                    <option value="2">savings</option>
+                                    <option value="regular">regular</option>
+                                    <option value="random">random</option>
+                                    <option value="savings">savings</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label for="recipient-name" class="col-form-label">Value:</label>
-                                <input type="number" class="form-control" id="value">
+                                <input type="number" class="form-control" id="value" name="value">
                             </div>
                             <div class="form-group">
                                 <label for="recipient-name" class="col-form-label">Name:</label>
-                                <input type="text" class="form-control" id="name">
+                                <input type="text" class="form-control" id="name" name="name">
                             </div>
                             <div class="form-group">
                                 <label for="message-text" class="col-form-label">Comment:</label>
-                                <textarea class="form-control" id="message-text"></textarea>
+                                <textarea class="form-control" id="message-text" name="comment"></textarea>
                             </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-info">Add</button>
-                    </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <input type="submit" class="btn btn-info" value="Add">
+                            </div>
+                            <input type="hidden" value="{{ project.id }}" name="project_id">
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
