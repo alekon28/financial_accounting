@@ -11,7 +11,7 @@
         <h3 class="col-11">Income</h3>
         <button type="button" class="btn btn-info col-1" data-toggle="modal" data-target="#IncomeAddNew">Add new</button>
     </div>
-        {% if incomes %}
+        {% if transactions %}
     <div class="table-responsive">
     <table class="table table-bordered">
   <thead class="thead-dark">
@@ -24,16 +24,18 @@
     </tr>
   </thead>
   <tbody>
-  {% for income in incomes %}
+  {% for transaction in transactions %}
+      {% if transaction.trans_type == "income" %}
     <tr>
-      <td>{{ income.name }}</td>
-      <td width="18%">{{ income.type }}</td>
-      <td width="18%">{{ income.value }}</td>
+      <td>{{ transaction.name }}</td>
+      <td width="18%">{{ transaction.freq_type }}</td>
+      <td width="18%">{{ transaction.value }}</td>
       <td width="18%">-</td>
       <td width="18%">
         <button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#ModalEdit">Edit</button>
-        <a type="button" class="btn btn-outline-danger ml-3" href="{{ url_for('delete_income', income_id=income.id) }}">Delete</a></td>
+        <a type="button" class="btn btn-outline-danger ml-3" href="{{ url_for('delete_transaction', trans_id=transaction.id) }}">Delete</a></td>
     </tr>
+      {% endif %}
   {% endfor %}
   </tbody>
 </table>
@@ -47,7 +49,7 @@
         <h3 class="col-11">Expenses</h3>
         <button type="button" class="btn btn-info col-1" data-toggle="modal" data-target="#ExpensesAddNew">Add new</button>
     </div>
-{% if expenses %}
+{% if transactions %}
 <div class="table-responsive">
 <table class="table table-bordered">
   <thead class="thead-light">
@@ -60,17 +62,19 @@
     </tr>
   </thead>
   <tbody>
-   {% for expense in expenses %}
+   {% for transaction in transactions %}
+       {% if transaction.trans_type == "expense" %}
     <tr>
-      <td>{{ expense.name }}</td>
-      <td width="18%">{{ expense.type }}</td>
-      <td width="18%">{{ expense.value }}</td>
+      <td>{{ transaction.name }}</td>
+      <td width="18%">{{ transaction.freq_type }}</td>
+      <td width="18%">{{ transaction.value }}</td>
       <td width="18%">-</td>
       <td width="18%">
         <button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#ModalEdit">Edit</button>
-        <a type="button" class="btn btn-outline-danger ml-3" href="{{ url_for('delete_expense', expense_id=expense.id) }}">Delete</a></td>
+        <a type="button" class="btn btn-outline-danger ml-3" href="{{ url_for('delete_transaction', trans_id=transaction.id) }}">Delete</a></td>
       </td>
     </tr>
+       {% endif %}
   {% endfor %}
   </tbody>
 </table>
@@ -80,52 +84,6 @@
     {% endif %}
     </div>
 
-
-
-    <div class="container">
-        <div class="modal fade" id="ModalEdit" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="ModalLabel">Editing mode</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <form>
-                    <div class="modal-body">
-                            <div class="form-group">
-                                <label class="mr-sm-2" for="inlineFormCustomSelect">Type</label>
-                                <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" name="type">
-                                    <option selected>Choose...</option>
-                                    <option value="regular">regular</option>
-                                    <option value="random">random</option>
-                                    <option value="savings">savings</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="recipient-name" class="col-form-label">Value:</label>
-                                <input type="number" class="form-control" id="value" name="value">
-                            </div>
-                            <div class="form-group">
-                                <label for="recipient-name" class="col-form-label">Name:</label>
-                                <input type="text" class="form-control" id="name" name="name">
-                            </div>
-                            <div class="form-group">
-                                <label for="message-text" class="col-form-label">Comment:</label>
-                                <textarea class="form-control" id="message-text" name="comment"></textarea>
-                            </div>
-                    </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <input type="submit" class="btn btn-info" value="Add">
-                        </div>
-                        <input type="hidden" value="{{ project.id }}" name="project_id">
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
 
         <div class="container">
         <div class="modal fade" id="IncomeAddNew" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
@@ -137,24 +95,23 @@
                         <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form method="POST" action="/add_income">
+                    <form method="POST" action="/add_transaction">
                     <div class="modal-body">
                             <div class="form-group">
                                 <label class="mr-sm-2" for="inlineFormCustomSelect">Type</label>
-                                <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" name="type">
-                                    <option selected>Choose...</option>
-                                    <option value="regular">regular</option>
-                                    <option value="random">random</option>
-                                    <option value="savings">savings</option>
+                                <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" name="freq_type">
+                                    <option value="regular">Regular</option>
+                                    <option value="random" selected>Random</option>
+                                    <option value="savings">Savings</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label for="recipient-name" class="col-form-label">Value:</label>
-                                <input type="number" class="form-control" id="value" name="value">
+                                <input type="number" class="form-control" id="value" name="value" required>
                             </div>
                             <div class="form-group">
                                 <label for="recipient-name" class="col-form-label">Name:</label>
-                                <input type="text" class="form-control" id="name" name="name">
+                                <input type="text" class="form-control" id="name" name="name" required>
                             </div>
                             <div class="form-group">
                                 <label for="message-text" class="col-form-label">Comment:</label>
@@ -165,7 +122,7 @@
                                 <input type="submit" class="btn btn-info" value="Add">
                             </div>
                             <input type="hidden" value="{{ project.id }}" name="project_id">
-
+                            <input type="hidden" value="income" name="trans_type">
                         </div>
                     </form>
                 </div>
@@ -183,24 +140,23 @@
                         <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form method="POST" action="/add_expense">
+                    <form method="POST" action="/add_transaction">
                     <div class="modal-body">
                             <div class="form-group">
                                 <label class="mr-sm-2" for="inlineFormCustomSelect">Type</label>
-                                <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" name="type">
-                                    <option selected>Choose...</option>
-                                    <option value="regular">regular</option>
-                                    <option value="random">random</option>
-                                    <option value="savings">savings</option>
+                                <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" name="freq_type">
+                                    <option value="regular">Regular</option>
+                                    <option value="random" selected>Random</option>
+                                    <option value="savings">Savings</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label for="recipient-name" class="col-form-label">Value:</label>
-                                <input type="number" class="form-control" id="value" name="value">
+                                <input type="number" class="form-control" id="value" name="value" required>
                             </div>
                             <div class="form-group">
                                 <label for="recipient-name" class="col-form-label">Name:</label>
-                                <input type="text" class="form-control" id="name" name="name">
+                                <input type="text" class="form-control" id="name" name="name" required>
                             </div>
                             <div class="form-group">
                                 <label for="message-text" class="col-form-label">Comment:</label>
@@ -211,6 +167,7 @@
                                 <input type="submit" class="btn btn-info" value="Add">
                             </div>
                         <input type="hidden" value="{{ project.id }}" name="project_id">
+                        <input type="hidden" value="expense" name="trans_type">
                     </div>
                     </form>
                 </div>

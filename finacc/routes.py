@@ -4,7 +4,7 @@ from flask_login import login_user, login_required, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from finacc import app, db
-from finacc.models import User, Project, Income, Expense
+from finacc.models import User, Project, Transaction
 from finacc.validator import Validator
 
 
@@ -94,90 +94,46 @@ def project_data():
     if not project or project.user_id != user_id:
         flash("Project not found", "error")
         return redirect(url_for('project'))
-    incomes = Income.query.filter_by(project_id=project.id).all()
-    expenses = Expense.query.filter_by(project_id=project.id).all()
-    return render_template("project_data.html", incomes=incomes, expenses=expenses, project=project)
+    transactions = Transaction.query.filter_by(project_id=project.id).all()
+    return render_template("project_data.html", transactions=transactions, project=project)
 
 
-@app.route('/add_income', methods=["POST"])
+@app.route('/add_transaction', methods=["POST"])
 @login_required
-def add_income():
+def add_transaction():
     user_id = current_user.id
-    project_id = request.form.get('project_id')
-    income_type = request.form.get('type')
-    value = request.form.get('value')
-    name = request.form.get('name')
-    comment = request.form.get('comment')
+    req_data = request.form.to_dict()
+    print(req_data)
     validator = Validator()
-    if not validator.validate_new_income(income_type, value, name, comment):
-        flash("Enter correct income data", "error")
-        return redirect(url_for('project_data', id=project_id))
-    project = Project.query.filter_by(id=project_id).first()
+    if not validator.validate_new_transaction(req_data):
+        flash("Enter correct transaction data", "error")
+        return redirect(url_for('project'))
+    project = Project.query.filter_by(id=req_data['project_id']).first()
     if not project or project.user_id != user_id:
         flash("Project not found", "error")
         return redirect(url_for('project'))
-    new_income = Income(project_id=project_id, name=name, type=income_type, value=int(value), comment=comment)
-    db.session.add(new_income)
+    new_trans = Transaction(project_id=req_data["project_id"], name=req_data["name"],
+                            freq_type=req_data["freq_type"], value=req_data["value"],
+                            comment=req_data["comment"], trans_type=req_data["trans_type"])
+    db.session.add(new_trans)
     db.session.commit()
-    flash(f"Income {new_income.name} added successfully", "success")
-    return redirect(url_for('project_data', id=project_id))
+    flash(f"Transaction {new_trans.name} added successfully", "success")
+    return redirect(url_for('project_data', id=req_data["project_id"]))
 
 
-@app.route('/delete_income', methods=["GET"])
+@app.route('/delete_transaction', methods=["GET"])
 @login_required
-def delete_income():
+def delete_transaction():
     user_id = current_user.id
-    income_id = request.args.get('income_id')
-    income = Income.query.filter_by(id=income_id).first()
-    project = Project.query.filter_by(id=income.project_id).first()
-    print(user_id, income_id, project)
+    trans_id = request.args.get('trans_id')
+    trans = Transaction.query.filter_by(id=trans_id).first()
+    project = Project.query.filter_by(id=trans.project_id).first()
     if not project or project.user_id != user_id:
         flash("Project not found", "error")
         return redirect(url_for('project'))
-    db.session.delete(income)
+    db.session.delete(trans)
     db.session.commit()
-    flash(f"Income {income.name} was deleted successfully", "warning")
-    return redirect(url_for('project_data', id=project.id))
-
-
-@app.route('/add_expense', methods=["POST"])
-@login_required
-def add_expense():
-    user_id = current_user.id
-    project_id = request.form.get('project_id')
-    expense_type = request.form.get('type')
-    value = request.form.get('value')
-    name = request.form.get('name')
-    comment = request.form.get('comment')
-    validator = Validator()
-    if not validator.validate_new_income(expense_type, value, name, comment):
-        flash("Enter correct expense data", "error")
-        return redirect(url_for('project_data', id=project_id))
-    project = Project.query.filter_by(id=project_id).first()
-    if not project or project.user_id != user_id:
-        flash("Project not found", "error")
-        return redirect(url_for('project'))
-    new_expense = Expense(project_id=project_id, name=name, type=expense_type, value=int(value), comment=comment)
-    db.session.add(new_expense)
-    db.session.commit()
-    flash(f"Expense {new_expense.name} added successfully", "success")
-    return redirect(url_for('project_data', id=project_id))
-
-
-@app.route('/delete_expense', methods=["GET"])
-@login_required
-def delete_expense():
-    user_id = current_user.id
-    expense_id = request.args.get('expense_id')
-    expense = Expense.query.filter_by(id=expense_id).first()
-    project = Project.query.filter_by(id=expense.project_id).first()
-    print(user_id, expense_id, project)
-    if not project or project.user_id != user_id:
-        flash("Project not found", "error")
-        return redirect(url_for('project'))
-    db.session.delete(expense)
-    db.session.commit()
-    flash(f"Expense {expense.name} was deleted successfully", "warning")
+    flash(f"Income {trans.name} was deleted successfully", "warning")
     return redirect(url_for('project_data', id=project.id))
 
 
