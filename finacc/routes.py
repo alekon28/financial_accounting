@@ -140,6 +140,47 @@ def delete_income():
     return redirect(url_for('project_data', id=project.id))
 
 
+@app.route('/add_expense', methods=["POST"])
+@login_required
+def add_expense():
+    user_id = current_user.id
+    project_id = request.form.get('project_id')
+    expense_type = request.form.get('type')
+    value = request.form.get('value')
+    name = request.form.get('name')
+    comment = request.form.get('comment')
+    validator = Validator()
+    if not validator.validate_new_income(expense_type, value, name, comment):
+        flash("Enter correct expense data", "error")
+        return redirect(url_for('project_data', id=project_id))
+    project = Project.query.filter_by(id=project_id).first()
+    if not project or project.user_id != user_id:
+        flash("Project not found", "error")
+        return redirect(url_for('project'))
+    new_expense = Expense(project_id=project_id, name=name, type=expense_type, value=int(value), comment=comment)
+    db.session.add(new_expense)
+    db.session.commit()
+    flash(f"Expense {new_expense.name} added successfully", "success")
+    return redirect(url_for('project_data', id=project_id))
+
+
+@app.route('/delete_expense', methods=["GET"])
+@login_required
+def delete_expense():
+    user_id = current_user.id
+    expense_id = request.args.get('expense_id')
+    expense = Expense.query.filter_by(id=expense_id).first()
+    project = Project.query.filter_by(id=expense.project_id).first()
+    print(user_id, expense_id, project)
+    if not project or project.user_id != user_id:
+        flash("Project not found", "error")
+        return redirect(url_for('project'))
+    db.session.delete(expense)
+    db.session.commit()
+    flash(f"Expense {expense.name} was deleted successfully", "warning")
+    return redirect(url_for('project_data', id=project.id))
+
+
 @app.after_request
 def redirect_to_login(response):
     if response.status_code == 401:
